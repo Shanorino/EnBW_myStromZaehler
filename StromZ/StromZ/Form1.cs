@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -48,9 +49,22 @@ namespace StromZ
                     }
                     //record into a file
                     Console.Write(m.Groups[1] + "\r\n");
+                    recordWatt(m.Groups[1].ToString());
                 }
                 Thread.Sleep(1000);
             }
+        }
+        private void recordWatt(string wattValue)
+        {
+            wattValue += ","+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") +"\r\n";
+            FileStream fs = new FileStream("C:\\Strom.txt", FileMode.Append);
+            //获得字节数组
+            byte[] data = System.Text.Encoding.Default.GetBytes(wattValue);
+            //开始写入
+            fs.Write(data, 0, data.Length);
+            //清空缓冲区、关闭流
+            fs.Flush();
+            fs.Close();
         }
     }
 }
